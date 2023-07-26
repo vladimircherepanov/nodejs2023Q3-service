@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Artist, CreateArtistDto } from '../interfaces';
+import {UpdateArtistDto} from "./dto/update-artist.dto";
 
 @Injectable()
 export class ArtistsService {
@@ -10,7 +11,7 @@ export class ArtistsService {
     return this.artists;
   }
 
-  getById(id): Artist {
+  getById(id: string): Artist {
     return this.artists.find((artist) => artist.id === id);
   }
 
@@ -22,7 +23,7 @@ export class ArtistsService {
     });
   }
 
-  update(id, updateArtistDto) {
+  update(id: string, updateArtistDto: UpdateArtistDto) {
     const index = this.artists.findIndex((artist) => artist.id === id);
     if (index !== -1) {
       this.artists[index] = {
@@ -36,7 +37,7 @@ export class ArtistsService {
     }
   }
 
-  delete(id) {
+  delete(id: string) {
     const index = this.artists.findIndex((artist) => artist.id === id);
     if (index !== -1) {
       this.artists.splice(index, 1);
