@@ -9,11 +9,13 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException, ForbiddenException,
+  NotFoundException,
+  ForbiddenException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { User } from '../interfaces';
 import { UsersService } from './users.service';
-import { ValidationPipe } from './validation.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
@@ -50,9 +52,8 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body(new ValidationPipe()) createArtistDto: CreateUserDto,
-  ): Promise<void> {
+  @UsePipes(new ValidationPipe())
+  async create(@Body() createArtistDto: CreateUserDto): Promise<void> {
     try {
       return await this.UsersService.create(createArtistDto);
     } catch (error) {
@@ -62,22 +63,25 @@ export class UsersController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
   async update(
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-    @Body(new ValidationPipe()) updateUserDto: UpdatePasswordDto,
+    @Body() updateUserDto: UpdatePasswordDto,
   ): Promise<void> {
-    const { oldPassword, newPassword } = updateUserDto
-    const checkPassword = await this.UsersService.checkPassword(uuid, oldPassword);
+    const { oldPassword, newPassword } = updateUserDto;
+    const checkPassword = await this.UsersService.checkPassword(
+      uuid,
+      oldPassword,
+    );
     if (checkPassword) {
-      if(!this.UsersService.update(uuid, newPassword)){
+      if (!this.UsersService.update(uuid, newPassword)) {
         throw new NotFoundException('User not found');
       }
-    }
-    else {
+    } else {
       throw new ForbiddenException('Old password is wrong');
     }
   }

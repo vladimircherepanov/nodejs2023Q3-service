@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { User, CreateUserDto } from '../interfaces';
-import { UpdatePasswordDto } from "./dto/update-password.dto";
+import { UpdatePasswordDto } from './dto/update-password.dto';
+
+import { users } from '../db/data';
 
 @Injectable()
 export class UsersService {
-  private users = [];
+  private readonly users: User[] = [];
+
+  constructor() {
+    this.users = users;
+  }
 
   getAll(): User[] {
     return this.users;
@@ -22,12 +28,12 @@ export class UsersService {
       password: userDto.password,
       version: 1, // integer number, increments on update
       createdAt: Date.now(), // timestamp of creation
-      updatedAt: Date.now(),// timestamp of last update
+      updatedAt: Date.now(), // timestamp of last update
     });
   }
 
   checkPassword(id: string, oldPassword: string) {
-     return this.users.find((user) => user.id === id).password === oldPassword;
+    return this.users.find((user) => user.id === id).password === oldPassword;
   }
 
   update(id: string, newPassword: string) {

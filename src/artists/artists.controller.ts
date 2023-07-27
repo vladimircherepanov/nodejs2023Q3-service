@@ -10,10 +10,11 @@ import {
   ParseUUIDPipe,
   HttpStatus,
   NotFoundException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Artist } from '../interfaces';
 import { ArtistsService } from './artists.service';
-import { ValidationPipe } from './validation.pipe';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
@@ -50,9 +51,8 @@ export class ArtistsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body(new ValidationPipe()) createArtistDto: CreateArtistDto,
-  ): Promise<void> {
+  @UsePipes(new ValidationPipe())
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<void> {
     try {
       return await this.ArtistsService.create(createArtistDto);
     } catch (error) {
@@ -62,13 +62,14 @@ export class ArtistsController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
   async update(
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-    @Body(new ValidationPipe()) updateArtistDto: UpdateArtistDto,
+    @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<void> {
     const artist = await this.ArtistsService.update(uuid, updateArtistDto);
     if (!artist) {

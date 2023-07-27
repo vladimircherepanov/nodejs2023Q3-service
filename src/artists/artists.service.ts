@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Artist, CreateArtistDto } from '../interfaces';
-import {UpdateArtistDto} from "./dto/update-artist.dto";
+import { UpdateArtistDto } from './dto/update-artist.dto';
+import { artists } from '../db/data';
 
 @Injectable()
 export class ArtistsService {
-  private artists = [];
+  private readonly artists = [];
+
+  constructor() {
+    this.artists = artists;
+  }
 
   getAll(): Artist[] {
     return this.artists;
