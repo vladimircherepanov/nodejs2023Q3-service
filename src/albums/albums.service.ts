@@ -4,6 +4,8 @@ import { Album, CreateAlbumDto } from '../interfaces';
 import { UpdateAlbumDto } from './dto/update-Album.dto';
 import { albums } from '../db/data';
 
+import { deleteTracks } from '../db/utils/cascadeDelete';
+
 @Injectable()
 export class AlbumsService {
   private readonly albums = [];
@@ -17,7 +19,7 @@ export class AlbumsService {
   }
 
   getById(id: string): Album {
-    return this.albums.find((Album) => Album.id === id);
+    return this.albums.find((album) => album.id === id);
   }
 
   create(createAlbumDto: CreateAlbumDto) {
@@ -30,7 +32,7 @@ export class AlbumsService {
   }
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const index = this.albums.findIndex((Album) => Album.id === id);
+    const index = this.albums.findIndex((album) => album.id === id);
     if (index !== -1) {
       this.albums[index] = {
         id: this.albums[index].id,
@@ -45,8 +47,9 @@ export class AlbumsService {
   }
 
   delete(id: string) {
-    const index = this.albums.findIndex((Album) => Album.id === id);
+    const index = this.albums.findIndex((album) => album.id === id);
     if (index !== -1) {
+      deleteTracks(id);
       this.albums.splice(index, 1);
       return true;
     } else {

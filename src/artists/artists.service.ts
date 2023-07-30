@@ -4,6 +4,8 @@ import { Artist, CreateArtistDto } from '../interfaces';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { artists } from '../db/data';
 
+import { deleteAlbums } from '../db/utils/cascadeDelete';
+
 @Injectable()
 export class ArtistsService {
   private readonly artists = [];
@@ -45,6 +47,7 @@ export class ArtistsService {
   delete(id: string) {
     const index = this.artists.findIndex((artist) => artist.id === id);
     if (index !== -1) {
+      deleteAlbums(id);
       this.artists.splice(index, 1);
       return true;
     } else {

@@ -65,7 +65,7 @@ export class TracksController {
       throw new NotFoundException('Artist not found');
     } else {
       const album = await this.albumsService.getById(albumId);
-      if(!album) {
+      if (!album) {
         throw new NotFoundException('Album not found');
       } else {
         try {
