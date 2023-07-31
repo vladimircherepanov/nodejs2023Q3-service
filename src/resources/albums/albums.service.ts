@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Album, CreateAlbumDto } from '../interfaces';
-import { UpdateAlbumDto } from './dto/update-Album.dto';
-import { albums } from '../db/data';
+import { Album, CreateAlbumDto } from '../../interfaces';
+import { UpdateAlbumDto } from './dto/update-album.dto';
+import { albums } from '../../db/data';
 
-import { deleteTracks } from '../db/utils/cascadeDelete';
+import { deleteTracks } from '../../db/utils/cascadeDelete';
 
 @Injectable()
 export class AlbumsService {
@@ -23,24 +23,31 @@ export class AlbumsService {
   }
 
   create(createAlbumDto: CreateAlbumDto) {
-    this.albums.push({
+    const request = {
       id: uuidv4(),
       name: createAlbumDto.name,
       year: createAlbumDto.year,
       artistId: createAlbumDto.artistId,
+    };
+    this.albums.push({
+      id: request.id,
+      name: request.name,
+      year: request.year,
+      artistId: request.artistId,
     });
+    return request;
   }
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const index = this.albums.findIndex((album) => album.id === id);
     if (index !== -1) {
       this.albums[index] = {
-        id: this.albums[index].id,
+        id: id,
         name: updateAlbumDto.name,
         year: updateAlbumDto.year,
         artistId: updateAlbumDto.artistId,
       };
-      return true;
+      return this.albums[index];
     } else {
       return false;
     }

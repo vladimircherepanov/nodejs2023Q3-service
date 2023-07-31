@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Track, CreateTrackDto } from '../interfaces';
+import { Track, CreateTrackDto } from '../../interfaces';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { tracks } from '../db/data';
+import { tracks } from '../../db/data';
 
 @Injectable()
 export class TracksService {
@@ -21,13 +21,22 @@ export class TracksService {
   }
 
   create(createTrackDto: CreateTrackDto) {
-    this.tracks.push({
+    const request = {
       id: uuidv4(),
       name: createTrackDto.name,
       duration: createTrackDto.duration,
       artistId: createTrackDto.artistId,
       albumId: createTrackDto.albumId,
+    };
+
+    this.tracks.push({
+      id: request.id,
+      name: request.name,
+      duration: request.duration,
+      artistId: request.artistId,
+      albumId: request.albumId,
     });
+    return request;
   }
 
   update(id: string, updateTrackDto: UpdateTrackDto) {
@@ -40,7 +49,7 @@ export class TracksService {
         albumId: updateTrackDto.albumId,
         artistId: updateTrackDto.artistId,
       };
-      return true;
+      return this.tracks[index];
     } else {
       return false;
     }

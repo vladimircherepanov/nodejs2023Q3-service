@@ -1,4 +1,4 @@
-import { IsString, IsInt } from 'class-validator';
+import {IsString, IsInt, IsOptional} from 'class-validator';
 
 export class UpdateAlbumDto {
   @IsString()
@@ -6,5 +6,6 @@ export class UpdateAlbumDto {
   @IsInt()
   year: number;
   @IsString()
+  @IsOptional()
   artistId: string;
 }

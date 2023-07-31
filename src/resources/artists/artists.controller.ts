@@ -13,12 +13,12 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Artist } from '../interfaces';
+import { Artist } from '../../interfaces';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
-@Controller('artists')
+@Controller('artist')
 export class ArtistsController {
   constructor(private readonly ArtistsService: ArtistsService) {}
 
@@ -52,7 +52,7 @@ export class ArtistsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createArtistDto: CreateArtistDto): Promise<void> {
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
     try {
       return await this.ArtistsService.create(createArtistDto);
     } catch (error) {
@@ -70,11 +70,11 @@ export class ArtistsController {
     )
     uuid: string,
     @Body() updateArtistDto: UpdateArtistDto,
-  ): Promise<void> {
+  ) {
     const artist = await this.ArtistsService.update(uuid, updateArtistDto);
     if (!artist) {
       throw new NotFoundException('Artist not found');
-    }
+    } else return artist;
   }
 
   @Delete(':id')

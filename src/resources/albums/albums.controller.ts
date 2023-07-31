@@ -13,13 +13,13 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Album } from '../interfaces';
+import { Album } from '../../interfaces';
 import { AlbumsService } from './albums.service';
 import { ArtistsService } from '../artists/artists.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
-@Controller('albums')
+@Controller('album')
 export class AlbumsController {
   constructor(
     private readonly albumsService: AlbumsService,
@@ -57,16 +57,11 @@ export class AlbumsController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   async create(@Body() createAlbumDto: CreateAlbumDto) {
-    const { artistId } = createAlbumDto;
-    const artist = await this.artistsService.getById(artistId);
-    if (artist) {
-      try {
-        return await this.albumsService.create(createAlbumDto);
-      } catch (error) {
-        throw HttpStatus.INTERNAL_SERVER_ERROR;
-      }
-    } else {
-      throw new NotFoundException('Artist not found');
+    try {
+      const album = await this.albumsService.create(createAlbumDto);
+      return album;
+    } catch (error) {
+      throw HttpStatus.INTERNAL_SERVER_ERROR;
     }
   }
 
@@ -80,11 +75,11 @@ export class AlbumsController {
     )
     uuid: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Promise<void> {
+  ): Promise<Album> {
     const album = await this.albumsService.update(uuid, updateAlbumDto);
     if (!album) {
       throw new NotFoundException('Album not found');
-    }
+    } else return album;
   }
 
   @Delete(':id')
@@ -95,10 +90,12 @@ export class AlbumsController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ): Promise<void> {
+  ) {
     const album = await this.albumsService.delete(uuid);
-    if (!album) {
-      throw new NotFoundException('Album not found');
+    if(album) {
+      console.log(album);
+      return album;
     }
+      throw new NotFoundException();
   }
 }

@@ -14,18 +14,18 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { User } from '../interfaces';
+import { User } from '../../interfaces';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly UsersService: UsersService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll(): Promise<User[]> {
+  async getAll() {
     try {
       return await this.UsersService.getAll();
     } catch (error) {
@@ -42,9 +42,9 @@ export class UsersController {
     )
     uuid: string,
   ): Promise<User> {
-    const artist = await this.UsersService.getById(uuid);
-    if (artist) {
-      return artist;
+    const user = await this.UsersService.getById(uuid);
+    if (user) {
+      return user;
     } else {
       throw new NotFoundException('User not found');
     }
@@ -53,7 +53,7 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createArtistDto: CreateUserDto): Promise<void> {
+  async create(@Body() createArtistDto: CreateUserDto) {
     try {
       return await this.UsersService.create(createArtistDto);
     } catch (error) {

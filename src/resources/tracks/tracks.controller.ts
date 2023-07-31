@@ -13,14 +13,14 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Track } from '../interfaces';
+import { Track } from '../../interfaces';
 import { TracksService } from './tracks.service';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
-@Controller('tracks')
+@Controller('track')
 export class TracksController {
   constructor(
     private readonly tracksService: TracksService,
@@ -59,22 +59,11 @@ export class TracksController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   async create(@Body() createTrackDto: CreateTrackDto) {
-    const { artistId, albumId } = createTrackDto;
-    const artist = await this.artistsService.getById(artistId);
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    } else {
-      const album = await this.albumsService.getById(albumId);
-      if (!album) {
-        throw new NotFoundException('Album not found');
-      } else {
         try {
           return await this.tracksService.create(createTrackDto);
         } catch (error) {
           throw HttpStatus.INTERNAL_SERVER_ERROR;
         }
-      }
-    }
   }
 
   @Put(':id')
@@ -91,9 +80,10 @@ export class TracksController {
     const track = await this.tracksService.update(uuid, updateTrackDto);
     if (!track) {
       throw new NotFoundException('Track not found');
+    } else {
+      return track
     }
   }
-
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(

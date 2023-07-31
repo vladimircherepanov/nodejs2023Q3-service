@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Favorites } from '../../interfaces';
-import { albums, favorites } from '../../db/data';
+import { Favorites } from '../../../interfaces';
+import { albums, favorites } from '../../../db/data';
 
 @Injectable()
 export class AlbumsService {
@@ -19,7 +19,7 @@ export class AlbumsService {
     if (album) {
       if (!this.favorites.albums.map((e) => id).includes(id)) {
         this.favorites.albums.push(album);
-        return true;
+        return this.favorites.albums;
       }
       return false;
     }

@@ -26,7 +26,7 @@ export class AlbumsController {
     const album = await this.albumsService.create(uuid);
     if (!album) {
       throw new NotFoundException('Album not found of Album already in favs');
-    }
+    } else { return album }
   }
 
   @Delete(':id')

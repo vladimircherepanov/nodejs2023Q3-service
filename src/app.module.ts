@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ArtistsModule } from './artists/artists.module';
-import { UsersModule } from './users/users.module';
-import { AlbumsModule } from './albums/albums.module';
-import { TracksModule } from './tracks/tracks.module';
+import { ArtistsModule } from './resources/artists/artists.module';
+import { UsersModule } from './resources/users/users.module';
+import { AlbumsModule } from './resources/albums/albums.module';
+import { TracksModule } from './resources/tracks/tracks.module';
 
-import { FavsModule } from './favs/favs.module';
-import { FavsArtistsModule } from './favs/artists/artists.module';
-import { FavsAlbumsModule } from './favs/albums/albums.module';
-import { FavsTracksModule } from './favs/tracks/tracks.module';
+import { FavsModule } from './resources/favs/favs.module';
+import { FavsArtistsModule } from './resources/favs/artists/artists.module';
+import { FavsAlbumsModule } from './resources/favs/albums/albums.module';
+import { FavsTracksModule } from './resources/favs/tracks/tracks.module';
 import { RouterModule } from '@nestjs/core';
 
 @Module({

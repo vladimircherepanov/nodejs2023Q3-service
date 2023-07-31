@@ -1,5 +1,5 @@
 import { Controller, HttpCode, Get, HttpStatus } from '@nestjs/common';
-import { Favorites } from '../interfaces';
+import { Favorites } from '../../interfaces';
 import { FavsService } from './favs.service';
 
 @Controller('')
