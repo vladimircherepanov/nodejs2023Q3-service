@@ -17,13 +17,10 @@ export class TracksService {
   create(id: string) {
     const track = tracks.find((track) => track.id === id);
     if (track) {
-      if (!this.favorites.tracks.map((e) => id).includes(id)) {
-        this.favorites.tracks.push(track);
+        this.favorites.tracks.push(track.id);
         return true;
       }
       return false;
-    }
-    return false;
   }
 
   delete(trackId: string) {

@@ -92,10 +92,10 @@ export class AlbumsController {
     uuid: string,
   ) {
     const album = await this.albumsService.delete(uuid);
-    if(album) {
+    if (album) {
       console.log(album);
       return album;
     }
-      throw new NotFoundException();
+    throw new NotFoundException();
   }
 }

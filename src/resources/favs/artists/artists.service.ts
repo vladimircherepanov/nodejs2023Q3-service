@@ -17,18 +17,15 @@ export class ArtistsService {
   create(id: string) {
     const artist = artists.find((artist) => artist.id === id);
     if (artist) {
-      if (!this.favorites.artists.map((e) => id).includes(id)) {
-        this.favorites.artists.push(artist);
+        this.favorites.artists.push(artist.id);
         return true;
       }
       return false;
-    }
-    return false;
   }
 
   delete(id: string) {
-    const index = this.favorites.artists.indexOf(id);
-    if (index !== -1) {
+    const index = this.favorites.artists.findIndex((e) => e === id)
+    if (index) {
       this.favorites.artists.splice(index, 1);
       return true;
     }

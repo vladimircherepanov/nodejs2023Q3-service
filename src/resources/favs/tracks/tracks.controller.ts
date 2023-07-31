@@ -6,7 +6,7 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException,
+  NotFoundException, UnprocessableEntityException,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 
@@ -25,7 +25,7 @@ export class TracksController {
   ) {
     const track = await this.tracksService.create(uuid);
     if (!track) {
-      throw new NotFoundException('Track not found of Track already in favs');
+      throw new UnprocessableEntityException('Track not found');
     }
   }
 

@@ -6,7 +6,7 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException,
+  NotFoundException, UnprocessableEntityException,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 
@@ -25,8 +25,10 @@ export class AlbumsController {
   ) {
     const album = await this.albumsService.create(uuid);
     if (!album) {
-      throw new NotFoundException('Album not found of Album already in favs');
-    } else { return album }
+      throw new UnprocessableEntityException('Album not found');
+    } else {
+      return album;
+    }
   }
 
   @Delete(':id')

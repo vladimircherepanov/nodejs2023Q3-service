@@ -6,7 +6,7 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException,
+  NotFoundException, UnprocessableEntityException,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 
@@ -25,7 +25,8 @@ export class ArtistsController {
   ) {
     const artist = await this.artistsService.create(uuid);
     if (!artist) {
-      throw new NotFoundException('Artist not found of Artist already in favs');
+      //throw new NotFoundException('Artist not found');
+      throw new UnprocessableEntityException('Artist not found')
     }
   }
 
@@ -42,5 +43,5 @@ export class ArtistsController {
     if (!artist) {
       throw new NotFoundException('Artist not found');
     }
-  }
+  } 
 }

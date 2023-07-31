@@ -17,11 +17,8 @@ export class AlbumsService {
   create(id: string) {
     const album = albums.find((album) => album.id === id);
     if (album) {
-      if (!this.favorites.albums.map((e) => id).includes(id)) {
-        this.favorites.albums.push(album);
+        this.favorites.albums.push(album.id);
         return this.favorites.albums;
-      }
-      return false;
     }
     return false;
   }

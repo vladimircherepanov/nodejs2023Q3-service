@@ -59,11 +59,11 @@ export class TracksController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   async create(@Body() createTrackDto: CreateTrackDto) {
-        try {
-          return await this.tracksService.create(createTrackDto);
-        } catch (error) {
-          throw HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+    try {
+      return await this.tracksService.create(createTrackDto);
+    } catch (error) {
+      throw HttpStatus.INTERNAL_SERVER_ERROR;
+    }
   }
 
   @Put(':id')
@@ -81,7 +81,7 @@ export class TracksController {
     if (!track) {
       throw new NotFoundException('Track not found');
     } else {
-      return track
+      return track;
     }
   }
   @Delete(':id')
