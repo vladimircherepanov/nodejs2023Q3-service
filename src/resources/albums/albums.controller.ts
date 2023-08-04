@@ -13,22 +13,18 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Album } from '../../interfaces';
+import { AlbumInterface } from '../../interfaces';
 import { AlbumsService } from './albums.service';
-import { ArtistsService } from '../artists/artists.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumsController {
-  constructor(
-    private readonly albumsService: AlbumsService,
-    private readonly artistsService: ArtistsService,
-  ) {}
+  constructor(private readonly albumsService: AlbumsService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll(): Promise<Album[]> {
+  async getAll(): Promise<AlbumInterface[]> {
     try {
       return await this.albumsService.getAll();
     } catch (error) {
@@ -44,7 +40,7 @@ export class AlbumsController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ): Promise<Album> {
+  ): Promise<AlbumInterface | boolean> {
     const album = await this.albumsService.getById(uuid);
     if (album) {
       return album;
@@ -56,7 +52,7 @@ export class AlbumsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createAlbumDto: CreateAlbumDto) {
+  async create(@Body() createAlbumDto: CreateAlbumDto):Promise<AlbumInterface> {
     try {
       const album = await this.albumsService.create(createAlbumDto);
       return album;
@@ -75,7 +71,7 @@ export class AlbumsController {
     )
     uuid: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Promise<Album> {
+  ): Promise<AlbumInterface> {
     const album = await this.albumsService.update(uuid, updateAlbumDto);
     if (!album) {
       throw new NotFoundException('Album not found');

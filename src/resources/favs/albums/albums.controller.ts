@@ -6,12 +6,14 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException, UnprocessableEntityException,
+  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 
 @Controller('')
 export class AlbumsController {
+
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post(':id')
@@ -24,11 +26,11 @@ export class AlbumsController {
     uuid: string,
   ) {
     const album = await this.albumsService.create(uuid);
-    if (!album) {
-      throw new UnprocessableEntityException('Album not found');
-    } else {
+    //if (!album) {
+      //throw new UnprocessableEntityException('Album not found');
+    //} else {
       return album;
-    }
+    //}
   }
 
   @Delete(':id')

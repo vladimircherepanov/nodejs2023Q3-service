@@ -6,7 +6,8 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  NotFoundException, UnprocessableEntityException,
+  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 
@@ -23,10 +24,10 @@ export class TracksController {
     )
     uuid: string,
   ) {
-    const track = await this.tracksService.create(uuid);
-    if (!track) {
-      throw new UnprocessableEntityException('Track not found');
-    }
+    await this.tracksService.create(uuid);
+    //if (!track) {
+      //throw new UnprocessableEntityException('Track not found');
+    //}
   }
 
   @Delete(':id')

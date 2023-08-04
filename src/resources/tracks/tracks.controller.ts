@@ -13,24 +13,18 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Track } from '../../interfaces';
+import { TrackInterface } from '../../interfaces';
 import { TracksService } from './tracks.service';
-import { ArtistsService } from '../artists/artists.service';
-import { AlbumsService } from '../albums/albums.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Controller('track')
 export class TracksController {
-  constructor(
-    private readonly tracksService: TracksService,
-    private readonly artistsService: ArtistsService,
-    private readonly albumsService: AlbumsService,
-  ) {}
+  constructor(private readonly tracksService: TracksService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll(): Promise<Track[]> {
+  async getAll(): Promise<TrackInterface[]> {
     try {
       return await this.tracksService.getAll();
     } catch (error) {
@@ -46,7 +40,7 @@ export class TracksController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ): Promise<Track> {
+  ): Promise<TrackInterface | boolean> {
     const track = await this.tracksService.getById(uuid);
     if (track) {
       return track;
@@ -58,7 +52,7 @@ export class TracksController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto):Promise<TrackInterface> {
     try {
       return await this.tracksService.create(createTrackDto);
     } catch (error) {
@@ -76,12 +70,12 @@ export class TracksController {
     )
     uuid: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): Promise<void> {
+  ): Promise<TrackInterface | boolean> {
     const track = await this.tracksService.update(uuid, updateTrackDto);
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    } else {
+    if (track) {
       return track;
+    } else {
+      throw new NotFoundException('Track not found');
     }
   }
   @Delete(':id')
@@ -95,7 +89,7 @@ export class TracksController {
   ): Promise<void> {
     const track = await this.tracksService.delete(uuid);
     if (!track) {
-      throw new NotFoundException('Album not found');
+      throw new NotFoundException('Track not found');
     }
   }
 }

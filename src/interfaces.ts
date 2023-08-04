@@ -1,10 +1,10 @@
-export interface User {
+export interface UserInterface {
   id: string; // uuid v4
   login: string;
   password: string;
   version: number; // integer number, increments on update
-  createdAt: number; // timestamp of creation
-  updatedAt: number; // timestamp of last update
+  createdAt: Date; // timestamp of creation
+  updatedAt: Date; // timestamp of last update
 }
 
 export interface CreateUserDto {
@@ -17,7 +17,7 @@ export interface UpdatePasswordDto {
   newPassword: string; // new password
 }
 
-export interface Artist {
+export interface ArtistInterface {
   id: string; // uuid v4
   name: string;
   grammy: boolean;
@@ -28,7 +28,7 @@ export interface CreateArtistDto {
   grammy: boolean;
 }
 
-export interface Album {
+export interface AlbumInterface {
   id: string; // uuid v4
   name: string;
   year: number;
@@ -47,7 +47,7 @@ export interface UpdateAlbumDto {
   artistId: string;
 }
 
-export interface Track {
+export interface TrackInterface {
   id: string; // uuid v4
   name: string;
   artistId: string | null; // refers to Artist

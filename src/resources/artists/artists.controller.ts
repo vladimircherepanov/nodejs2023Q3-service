@@ -13,7 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Artist } from '../../interfaces';
+import { ArtistInterface } from '../../interfaces';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -24,7 +24,7 @@ export class ArtistsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll(): Promise<Artist[]> {
+  async getAll(): Promise<ArtistInterface[]> {
     try {
       return await this.ArtistsService.getAll();
     } catch (error) {
@@ -40,7 +40,7 @@ export class ArtistsController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ): Promise<Artist> {
+  ): Promise<ArtistInterface | boolean> {
     const artist = await this.ArtistsService.getById(uuid);
     if (artist) {
       return artist;
@@ -52,7 +52,9 @@ export class ArtistsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+  async create(
+    @Body() createArtistDto: CreateArtistDto,
+  ): Promise<ArtistInterface> {
     try {
       return await this.ArtistsService.create(createArtistDto);
     } catch (error) {

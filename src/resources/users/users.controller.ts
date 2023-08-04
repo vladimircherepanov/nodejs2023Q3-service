@@ -14,7 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { User } from '../../interfaces';
+import { UserInterface } from '../../interfaces';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -41,7 +41,7 @@ export class UsersController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ): Promise<User> {
+  ) {
     const user = await this.UsersService.getById(uuid);
     if (user) {
       return user;
@@ -53,9 +53,9 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createArtistDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
-      return await this.UsersService.create(createArtistDto);
+      return await this.UsersService.create(createUserDto);
     } catch (error) {
       throw HttpStatus.INTERNAL_SERVER_ERROR;
     }
@@ -71,18 +71,24 @@ export class UsersController {
     )
     uuid: string,
     @Body() updateUserDto: UpdatePasswordDto,
-  ): Promise<void> {
+  ) {
     const { oldPassword, newPassword } = updateUserDto;
     const checkPassword = await this.UsersService.checkPassword(
       uuid,
       oldPassword,
     );
-    if (checkPassword) {
-      if (!this.UsersService.update(uuid, newPassword)) {
-        throw new NotFoundException('User not found');
-      }
+    const user = await this.UsersService.getById(uuid);
+    if (!user) {
+      throw new NotFoundException('User not found');
     } else {
-      throw new ForbiddenException('Old password is wrong');
+      if (checkPassword) {
+        const updatedUser = await this.UsersService.update(uuid, newPassword);
+        if (updatedUser) {
+          return updatedUser;
+        } else {
+          throw new ForbiddenException('Old password is wrong');
+        }
+      }
     }
   }
 
@@ -95,9 +101,11 @@ export class UsersController {
     )
     uuid: string,
   ): Promise<void> {
-    const artist = await this.UsersService.delete(uuid);
-    if (!artist) {
+    const user = await this.UsersService.getById(uuid);
+    if (!user) {
       throw new NotFoundException('User not found');
+    } else {
+      await this.UsersService.delete(uuid);
     }
   }
 }

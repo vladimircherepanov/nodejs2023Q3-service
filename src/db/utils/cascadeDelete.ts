@@ -8,7 +8,6 @@ export const deleteTracks = (id: string) => {
     if (index !== -1) {
       tracks[index].albumId = null;
       tracks[index].artistId = null;
-
     }
   });
 };
@@ -21,9 +20,8 @@ export const deleteAlbums = (id: string) => {
     deleteTracks(albumId);
     const index = albums.findIndex((e) => e.id === id);
     if (index !== -1) {
-      console.log(albums[index])
+      console.log(albums[index]);
       albums[index].artistId = null;
-
     }
-  })
+  });
 };

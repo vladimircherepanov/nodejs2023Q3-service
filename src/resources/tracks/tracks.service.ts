@@ -1,67 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Track, CreateTrackDto } from '../../interfaces';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TrackInterface, CreateTrackDto } from '../../interfaces';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { tracks } from '../../db/data';
+import { Track } from './track.entity';
 
 @Injectable()
 export class TracksService {
-  private readonly tracks = [];
 
-  constructor() {
-    this.tracks = tracks;
+  constructor(
+      @InjectRepository(Track)
+      private tracksRepository: Repository<Track>,
+  ) {}
+
+  async getAll(): Promise<TrackInterface[]> {
+    return await this.tracksRepository.find();
   }
 
-  getAll(): Track[] {
-    return this.tracks;
+  async getById(id: string): Promise<TrackInterface | boolean> {
+    const track = await this.tracksRepository.findOne({ where: { id } });
+    if(track) {
+      return track
+    } else return false;
   }
 
-  getById(id: string): Track {
-    return this.tracks.find((track) => track.id === id);
-  }
-
-  create(createTrackDto: CreateTrackDto) {
-    const request = {
+  async create(createTrackDto: CreateTrackDto) {
+    const track = await this.tracksRepository.create({
       id: uuidv4(),
       name: createTrackDto.name,
       duration: createTrackDto.duration,
       artistId: createTrackDto.artistId,
       albumId: createTrackDto.albumId,
-    };
-
-    this.tracks.push({
-      id: request.id,
-      name: request.name,
-      duration: request.duration,
-      artistId: request.artistId,
-      albumId: request.albumId,
-    });
-    return request;
+    })
+    return await this.tracksRepository.save(track);
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    const index = this.tracks.findIndex((track) => track.id === id);
-    if (index !== -1) {
-      this.tracks[index] = {
-        id: this.tracks[index].id,
-        duration: updateTrackDto.duration,
-        name: updateTrackDto.name,
-        albumId: updateTrackDto.albumId,
-        artistId: updateTrackDto.artistId,
-      };
-      return this.tracks[index];
-    } else {
-      return false;
-    }
+  async update(id: string, updateTrackDto: UpdateTrackDto):Promise<TrackInterface | boolean> {
+    const track = await this.tracksRepository.findOne({ where: { id } });
+    if(track) {
+      track.name = updateTrackDto.name;
+      track.duration = updateTrackDto.duration;
+      track.artistId = updateTrackDto.artistId;
+      track.albumId = updateTrackDto.albumId;
+      return await this.tracksRepository.save(track);
+    } else return false;
   }
 
-  delete(id: string) {
-    const index = this.tracks.findIndex((track) => track.id === id);
-    if (index !== -1) {
-      this.tracks.splice(index, 1);
+  async delete(id: string):Promise<boolean> {
+    const track = await this.tracksRepository.findOne({ where: { id } });
+    if(track) {
+      await this.tracksRepository.delete(id);
       return true;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 }

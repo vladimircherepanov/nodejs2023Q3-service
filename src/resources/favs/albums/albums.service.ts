@@ -1,32 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { Favorites } from '../../../interfaces';
-import { albums, favorites } from '../../../db/data';
+import { Repository, In } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FavsAlbums } from "./favsAlbums.entity";
 
 @Injectable()
 export class AlbumsService {
-  private favorites: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
 
-  constructor() {
-    this.favorites = favorites;
+  constructor(
+      @InjectRepository(FavsAlbums)
+      private favsAlbumsRepository: Repository<FavsAlbums>,
+  ) {}
+
+  async getAll() {
+    const albumsIds = await this.favsAlbumsRepository.find();
+    const ids = albumsIds.map(e => e.id);
+
+    const xxx = await this.favsAlbumsRepository.find({ where: { id: In(ids), }, });
+    return xxx;
   }
 
-  create(id: string) {
-    const album = albums.find((album) => album.id === id);
+
+  async create(id: string) {
+    const album = await this.favsAlbumsRepository.create({
+      id: id
+    })
+    await this.favsAlbumsRepository.save(album);
+  }
+
+  async delete(id: string) {
+    const album = await this.favsAlbumsRepository.findOne({ where: { id } } )
     if (album) {
-        this.favorites.albums.push(album.id);
-        return this.favorites.albums;
-    }
-    return false;
-  }
-
-  delete(id: string) {
-    const index = this.favorites.albums.indexOf(id);
-    if (index !== -1) {
-      this.favorites.albums.splice(index, 1);
+      await this.favsAlbumsRepository.delete(id)
       return true;
     }
     return false;

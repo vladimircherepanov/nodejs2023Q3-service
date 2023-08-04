@@ -1,66 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Album, CreateAlbumDto } from '../../interfaces';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumInterface, CreateAlbumDto } from '../../interfaces';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { albums } from '../../db/data';
-
-import { deleteTracks } from '../../db/utils/cascadeDelete';
+import { Album } from "./album.entity";
 
 @Injectable()
 export class AlbumsService {
-  private readonly albums = [];
 
-  constructor() {
-    this.albums = albums;
+  constructor(
+      @InjectRepository(Album)
+      private albumsRepository: Repository<Album>,
+  ) {}
+
+  async getAll(): Promise<AlbumInterface[]> {
+    return await this.albumsRepository.find();
   }
 
-  getAll(): Album[] {
-    return this.albums;
+  async getById(id: string): Promise<AlbumInterface | boolean> {
+    const album = await this.albumsRepository.findOne({ where: { id } })
+    if(album) {
+      return album
+    } else return false
   }
 
-  getById(id: string): Album {
-    return this.albums.find((album) => album.id === id);
-  }
-
-  create(createAlbumDto: CreateAlbumDto) {
-    const request = {
+  async create(createAlbumDto: CreateAlbumDto):Promise<AlbumInterface> {
+    const artist = await this.albumsRepository.create({
       id: uuidv4(),
       name: createAlbumDto.name,
       year: createAlbumDto.year,
       artistId: createAlbumDto.artistId,
-    };
-    this.albums.push({
-      id: request.id,
-      name: request.name,
-      year: request.year,
-      artistId: request.artistId,
-    });
-    return request;
+    })
+    return await this.albumsRepository.save(artist);
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const index = this.albums.findIndex((album) => album.id === id);
-    if (index !== -1) {
-      this.albums[index] = {
-        id: id,
-        name: updateAlbumDto.name,
-        year: updateAlbumDto.year,
-        artistId: updateAlbumDto.artistId,
-      };
-      return this.albums[index];
-    } else {
-      return false;
-    }
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const album = await this.albumsRepository.findOne({ where: { id } })
+    if (album) {
+      album.name = updateAlbumDto.name;
+      album.year = updateAlbumDto.year;
+      album.artistId = updateAlbumDto.artistId
+      return await this.albumsRepository.save(album)
+    } else return false;
   }
 
-  delete(id: string) {
-    const index = this.albums.findIndex((album) => album.id === id);
-    if (index !== -1) {
-      deleteTracks(id);
-      this.albums.splice(index, 1);
+  async delete(id: string) {
+    const album = await this.albumsRepository.findOne({ where: { id } })
+    if (album) {
+      await this.albumsRepository.delete(id)
       return true;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 }

@@ -1,79 +1,71 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { User, CreateUserDto } from '../../interfaces';
-import { UpdatePasswordDto } from './dto/update-password.dto';
-
-import { users } from '../../db/data';
+import { UserInterface, CreateUserDto } from '../../interfaces';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [];
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  constructor() {
-    this.users = users;
+  async getAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  getAll(): User[] {
-    return this.users;
+  async getById(id: string) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (user) {
+      return { user };
+    } return false;
   }
 
-  getById(id: string): User {
-    return this.users.find((user) => user.id === id);
-  }
-
-  create(userDto: CreateUserDto) {
-    const id = uuidv4();
-    const request = {
+  async create(userDto: CreateUserDto) {
+    const user = this.usersRepository.create({
       id: uuidv4(),
       login: userDto.login,
       password: userDto.password,
-      version: 1, // integer number, increments on update
-      createdAt: Date.now(), // timestamp of creation
-      updatedAt: Date.now(), // timestamp of last update
-    };
-    this.users.push({
-      id: request.id,
-      login: request.login,
-      password: request.password,
-      version: request.version,
-      createdAt: request.createdAt,
-      updatedAt: request.updatedAt,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
-    return {
-      id: request.id,
-      login: request.login,
-      version: request.version,
-      createdAt: request.createdAt,
-      updatedAt: request.updatedAt,
-    };
+    const savedUser = await this.usersRepository.save(user);
+    const { id, login, version, createdAt, updatedAt } = savedUser;
+    return { id, login, version, createdAt, updatedAt };
   }
 
-  checkPassword(id: string, oldPassword: string) {
-    return this.users.find((user) => user.id === id).password === oldPassword;
+  async checkPassword(id: string, oldPassword: string): Promise<boolean> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (user) {
+      return user.checkPassword(oldPassword);
+    } else return false;
   }
 
-  update(id: string, newPassword: string) {
-    const user = this.users.find((user) => user.id === id);
-
+  async update(id: string, newPassword: string) {
+    const user = await this.usersRepository.findOne({ where: { id } });
     if (user) {
       user.password = newPassword;
-      user.version += 1;
+      user.version++;
       user.updatedAt = Date.now();
-
-      const { id, login, version, createdAt, updatedAt } = user;
-      return { id, login, version, createdAt, updatedAt };
-    }
-
-    return false;
+      await this.usersRepository.save(user);
+      return {
+        id: user.id,
+        login: user.login,
+        version: user.version,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      }
+    } else return false;
   }
 
-  delete(id: string) {
-    const index = this.users.findIndex((user) => user.id === id);
-    if (index !== -1) {
-      this.users.splice(index, 1);
+  async delete(id: string): Promise<boolean> {
+    const user = this.usersRepository.findOneBy({ id });
+    if (user) {
+      await this.usersRepository.delete(id);
       return true;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 }

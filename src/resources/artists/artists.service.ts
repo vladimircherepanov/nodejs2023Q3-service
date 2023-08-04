@@ -1,71 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { Artist, CreateArtistDto } from '../../interfaces';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ArtistInterface, CreateArtistDto } from '../../interfaces';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { artists } from '../../db/data';
-
-import { deleteAlbums } from '../../db/utils/cascadeDelete';
+import { Artist } from './artist.entity';
 
 @Injectable()
 export class ArtistsService {
-  private readonly artists = [];
+  constructor(
+    @InjectRepository(Artist)
+    private artistsRepository: Repository<Artist>,
+  ) {}
 
-  constructor() {
-    this.artists = artists;
+  async getAll(): Promise<ArtistInterface[]> {
+    return await this.artistsRepository.find();
   }
 
-  getAll(): Artist[] {
-    return this.artists;
+  async getById(id: string): Promise<ArtistInterface | boolean> {
+    const artist = await this.artistsRepository.findOne({ where: { id } });
+    if (artist) {
+      return artist;
+    } else return false;
   }
 
-  getById(id: string): Artist {
-    return this.artists.find((artist) => artist.id === id);
-  }
-
-  create(artistDto: CreateArtistDto) {
-    const request = {
+  async create(artistDto: CreateArtistDto): Promise<ArtistInterface> {
+    const artist = this.artistsRepository.create({
       id: uuidv4(),
       name: artistDto.name,
       grammy: artistDto.grammy,
-    };
-    this.artists.push({
-      id: request.id,
-      name: request.name,
-      grammy: request.grammy,
     });
-    return {
-      id: request.id,
-      name: request.name,
-      grammy: request.grammy,
-    };
+    return await this.artistsRepository.save(artist);
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    const index = this.artists.findIndex((artist) => artist.id === id);
-    if (index !== -1) {
-      this.artists[index] = {
-        //id: this.artists[index].id,
-        name: updateArtistDto.name,
-        grammy: updateArtistDto.grammy,
-      };
-      return {
-        id: this.artists[index].id,
-        name: updateArtistDto.name,
-        grammy: updateArtistDto.grammy,
-      };
-    } else {
-      return false;
-    }
+  async update(
+    id: string,
+    updateArtistDto: UpdateArtistDto,
+  ): Promise<ArtistInterface | boolean> {
+    const artist = await this.artistsRepository.findOne({ where: { id } });
+    if (artist) {
+      artist.name = updateArtistDto.name;
+      artist.grammy = updateArtistDto.grammy;
+      return await this.artistsRepository.save(artist);
+    } else return false;
   }
 
-  delete(id: string) {
-    const index = this.artists.findIndex((artist) => artist.id === id);
-    if (index !== -1) {
-      deleteAlbums(id);
-      this.artists.splice(index, 1);
+  async delete(id: string): Promise<boolean> {
+    const artist = await this.artistsRepository.findOne({ where: { id } });
+    if (artist) {
+      await this.artistsRepository.delete(id);
       return true;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 }
