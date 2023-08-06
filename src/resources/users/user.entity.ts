@@ -6,6 +6,8 @@ import {
   BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import 'dotenv/config';
+
 
 @Entity()
 export class User {
@@ -32,7 +34,7 @@ export class User {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, process.env.CRYPT_SALT);
   }
 
   checkPassword(oldPassword: string): Promise<boolean> {

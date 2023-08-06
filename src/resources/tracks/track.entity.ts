@@ -1,27 +1,27 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Artist } from "../artists/artist.entity";
-import { Album } from "../albums/album.entity";
+import { Artist } from '../artists/artist.entity';
+import { Album } from '../albums/album.entity';
 
 @Entity()
 export class Track {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    duration: number;
+  @Column()
+  duration: number;
 
-    @Column({ nullable: true })
-    artistId: string;
+  @Column({ nullable: true })
+  artistId: string;
 
-    @Column({ nullable: true })
-    albumId: string;
+  @Column({ nullable: true })
+  albumId: string;
 
-    @ManyToOne(() => Artist,  artist => artist.tracks, { onDelete: "SET NULL"})
-    artist: Artist
+  @ManyToOne(() => Artist, (artist) => artist.tracks, { onDelete: 'SET NULL' })
+  artist: Artist;
 
-    @ManyToOne(() => Album,  album => album.tracks, { onDelete: "SET NULL"})
-    album: Album
+  @ManyToOne(() => Album, (album) => album.tracks, { onDelete: 'SET NULL' })
+  album: Album;
 }

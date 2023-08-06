@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistsController } from './artists.controller';
 import { ArtistsService } from './artists.service';
-import { FavsArtists } from "./favsArtists.entity";
+import { FavsArtists } from './favsArtists.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FavsArtists])],

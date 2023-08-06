@@ -52,7 +52,9 @@ export class TracksController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createTrackDto: CreateTrackDto):Promise<TrackInterface> {
+  async create(
+    @Body() createTrackDto: CreateTrackDto,
+  ): Promise<TrackInterface> {
     try {
       return await this.tracksService.create(createTrackDto);
     } catch (error) {

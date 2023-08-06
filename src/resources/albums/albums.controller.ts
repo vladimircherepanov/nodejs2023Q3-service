@@ -52,7 +52,9 @@ export class AlbumsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async create(@Body() createAlbumDto: CreateAlbumDto):Promise<AlbumInterface> {
+  async create(
+    @Body() createAlbumDto: CreateAlbumDto,
+  ): Promise<AlbumInterface> {
     try {
       const album = await this.albumsService.create(createAlbumDto);
       return album;

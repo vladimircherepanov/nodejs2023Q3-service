@@ -13,7 +13,6 @@ import { AlbumsService } from './albums.service';
 
 @Controller('')
 export class AlbumsController {
-
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post(':id')
@@ -27,9 +26,9 @@ export class AlbumsController {
   ) {
     const album = await this.albumsService.create(uuid);
     //if (!album) {
-      //throw new UnprocessableEntityException('Album not found');
+    //throw new UnprocessableEntityException('Album not found');
     //} else {
-      return album;
+    return album;
     //}
   }
 

@@ -20,7 +20,8 @@ export class UsersService {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (user) {
       return { user };
-    } return false;
+    }
+    return false;
   }
 
   async create(userDto: CreateUserDto) {
@@ -57,7 +58,7 @@ export class UsersService {
         version: user.version,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-      }
+      };
     } else return false;
   }
 

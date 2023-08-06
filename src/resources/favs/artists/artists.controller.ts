@@ -26,9 +26,9 @@ export class ArtistsController {
   ) {
     const artist = await this.artistsService.create(uuid);
     //if (!artist) {
-      //throw new NotFoundException('Artist not found');
-      //throw new UnprocessableEntityException('Artist not found');
-   // }
+    //throw new NotFoundException('Artist not found');
+    //throw new UnprocessableEntityException('Artist not found');
+    // }
   }
 
   @Delete(':id')

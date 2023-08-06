@@ -1,12 +1,19 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany} from 'typeorm';
-import { FavsAlbums } from "./albums/favsAlbums.entity";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+} from 'typeorm';
+import { FavsAlbums } from './albums/favsAlbums.entity';
 
 @Entity()
 export class Favs {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    /*Column()
+  /*Column()
     albumId: string;
 
     @Column()
