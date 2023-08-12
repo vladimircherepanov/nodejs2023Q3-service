@@ -88,7 +88,7 @@ export class AlbumsController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     uuid: string,
-  ) {
+  ): Promise<void | boolean> {
     const album = await this.albumsService.delete(uuid);
     if (album) {
       console.log(album);

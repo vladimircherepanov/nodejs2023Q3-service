@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { UserInterface, CreateUserDto } from '../../interfaces';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../../db/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -56,8 +56,8 @@ export class UsersService {
         id: user.id,
         login: user.login,
         version: user.version,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        createdAt: Number(user.createdAt),
+        updatedAt: Number(user.updatedAt),
       };
     } else return false;
   }

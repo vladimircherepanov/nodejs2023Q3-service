@@ -5,8 +5,8 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Artist } from '../artists/artist.entity';
-import { Track } from '../tracks/track.entity';
+import { Artist } from './artist.entity';
+import { Track } from './track.entity';
 
 @Entity()
 export class Album {

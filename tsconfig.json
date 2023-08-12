@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "strict": true,
     "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "target": "es2017",
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "rootDir": ".",
     "outDir": "./dist",

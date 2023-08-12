@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Favorites } from '../../../interfaces';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FavsTracks } from './favsTracks.entity';
+import { FavsTracks } from '../../../db/entities/favsTracks.entity';
 
 @Injectable()
-export class TracksService {
+export class FavsTracksService {
   constructor(
     @InjectRepository(FavsTracks)
     private favsTracksRepository: Repository<FavsTracks>,

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumInterface, CreateAlbumDto } from '../../interfaces';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Album } from './album.entity';
+import { Album } from '../../db/entities/album.entity';
 
 @Injectable()
 export class AlbumsService {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { dataSourceOptions } from "./db/datasource";
+import { dataSourceOptions } from './db/datasource';
 
 import { ArtistsModule } from './resources/artists/artists.module';
 import { UsersModule } from './resources/users/users.module';
@@ -13,20 +13,19 @@ import { FavsArtistsModule } from './resources/favs/artists/artists.module';
 import { FavsAlbumsModule } from './resources/favs/albums/albums.module';
 import { FavsTracksModule } from './resources/favs/tracks/tracks.module';
 
-import { User } from './resources/users/user.entity';
-import { Artist } from './resources/artists/artist.entity';
-import { Album } from './resources/albums/album.entity';
-import { Track } from './resources/tracks/track.entity';
-import { Favs } from './resources/favs/favs.entity';
-import { FavsAlbums } from './resources/favs/albums/favsAlbums.entity';
-import { FavsArtists } from './resources/favs/artists/favsArtists.entity';
-import { FavsTracks } from './resources/favs/tracks/favsTracks.entity';
-
+import { User } from './db/entities/user.entity';
+import { Artist } from './db/entities/artist.entity';
+import { Album } from './db/entities/album.entity';
+import { Track } from './db/entities/track.entity';
+import { Favs } from './db/entities/favs.entity';
+import { FavsAlbums } from './db/entities/favsAlbums.entity';
+import { FavsArtists } from './db/entities/favsArtists.entity';
+import { FavsTracks } from './db/entities/favsTracks.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-    ...dataSourceOptions,
+      ...dataSourceOptions,
       entities: [
         User,
         Artist,
@@ -36,7 +35,7 @@ import { FavsTracks } from './resources/favs/tracks/favsTracks.entity';
         FavsAlbums,
         FavsArtists,
         FavsTracks,
-      ]
+      ],
     }),
     ArtistsModule,
     UsersModule,

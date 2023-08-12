@@ -8,7 +8,6 @@ import {
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
-
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -23,10 +22,10 @@ export class User {
   @Column()
   version: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   createdAt: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   updatedAt: number;
 
   /////////////////////
@@ -34,7 +33,7 @@ export class User {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, process.env.CRYPT_SALT);
+    this.password = await bcrypt.hash(this.password, 10); // process.env.CRYPT_SALT);
   }
 
   checkPassword(oldPassword: string): Promise<boolean> {

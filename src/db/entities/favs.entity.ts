@@ -6,7 +6,7 @@ import {
   JoinTable,
   OneToMany,
 } from 'typeorm';
-import { FavsAlbums } from './albums/favsAlbums.entity';
+import { FavsAlbums } from './favsAlbums.entity';
 
 @Entity()
 export class Favs {

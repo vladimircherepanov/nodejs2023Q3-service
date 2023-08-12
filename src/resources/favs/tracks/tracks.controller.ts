@@ -9,11 +9,15 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { TracksService } from './tracks.service';
+import { FavsTracksService } from './tracks.service';
+import {TracksService} from "../../tracks/tracks.service";
 
 @Controller('')
 export class TracksController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(
+      private readonly favsTracksService: FavsTracksService,
+      private readonly trackService: TracksService
+  ) {}
 
   @Post(':id')
   @HttpCode(HttpStatus.CREATED)
@@ -24,10 +28,10 @@ export class TracksController {
     )
     uuid: string,
   ) {
-    await this.tracksService.create(uuid);
-    //if (!track) {
-    //throw new UnprocessableEntityException('Track not found');
-    //}
+    const track = await this.trackService.getById(uuid);
+    if(track) {
+      await this.favsTracksService.create(uuid);
+    } else throw new UnprocessableEntityException('Track not found');
   }
 
   @Delete(':id')
@@ -39,7 +43,7 @@ export class TracksController {
     )
     uuid: string,
   ): Promise<void> {
-    const track = await this.tracksService.delete(uuid);
+    const track = await this.favsTracksService.delete(uuid);
     if (!track) {
       throw new NotFoundException('Artist not found');
     }

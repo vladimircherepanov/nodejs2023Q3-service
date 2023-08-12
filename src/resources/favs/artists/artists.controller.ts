@@ -9,26 +9,29 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { ArtistsService } from './artists.service';
+import { FavsArtistsService } from './artists.service';
+import { ArtistsService } from "../../artists/artists.service";
 
 @Controller('')
 export class ArtistsController {
-  constructor(private readonly artistsService: ArtistsService) {}
+  constructor(
+      private readonly favsArtistsService: FavsArtistsService,
+      private readonly artistsService: ArtistsService,
+  ) {}
 
   @Post(':id')
   @HttpCode(HttpStatus.CREATED)
   async create(
-    @Param(
-      'id',
-      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
-    )
-    uuid: string,
+      @Param(
+          'id',
+          new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+      )
+          uuid: string,
   ) {
-    const artist = await this.artistsService.create(uuid);
-    //if (!artist) {
-    //throw new NotFoundException('Artist not found');
-    //throw new UnprocessableEntityException('Artist not found');
-    // }
+    const artist = await this.artistsService.getById(uuid);
+    if (artist) {
+      await this.favsArtistsService.create(uuid);
+    } else throw new UnprocessableEntityException('Artist not found');
   }
 
   @Delete(':id')
@@ -40,7 +43,7 @@ export class ArtistsController {
     )
     uuid: string,
   ) {
-    const artist = await this.artistsService.delete(uuid);
+    const artist = await this.favsArtistsService.delete(uuid);
     if (!artist) {
       throw new NotFoundException('Artist not found');
     }

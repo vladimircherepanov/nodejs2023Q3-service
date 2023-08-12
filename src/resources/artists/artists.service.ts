@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtistInterface, CreateArtistDto } from '../../interfaces';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Artist } from './artist.entity';
+import { Artist } from '../../db/entities/artist.entity';
 
 @Injectable()
 export class ArtistsService {

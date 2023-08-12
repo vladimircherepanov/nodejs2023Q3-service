@@ -83,11 +83,9 @@ export class UsersController {
     } else {
       if (checkPassword) {
         const updatedUser = await this.UsersService.update(uuid, newPassword);
-        if (updatedUser) {
           return updatedUser;
         } else {
           throw new ForbiddenException('Old password is wrong');
-        }
       }
     }
   }

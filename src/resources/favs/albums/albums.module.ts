@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumsController } from './albums.controller';
-import { AlbumsService } from './albums.service';
-import { ArtistsService } from '../artists/artists.service';
-import { FavsAlbums } from './favsAlbums.entity';
+import { FavsAlbumsService } from './albums.service';
+import { FavsAlbums } from '../../../db/entities/favsAlbums.entity';
+import {Album} from "../../../db/entities/album.entity";
+import {AlbumsService} from "../../albums/albums.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FavsAlbums])],
+  imports: [TypeOrmModule.forFeature([FavsAlbums, Album])],
   controllers: [AlbumsController],
-  providers: [AlbumsService], //, ArtistsService],
+  providers: [FavsAlbumsService, AlbumsService],
   exports: [TypeOrmModule],
 })
 export class FavsAlbumsModule {}
