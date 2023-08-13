@@ -10,14 +10,14 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavsAlbumsService } from './albums.service';
-import {AlbumsService} from "../../albums/albums.service";
+import { AlbumsService } from '../../albums/albums.service';
 
 @Controller('')
 export class AlbumsController {
   constructor(
-      private readonly favsAlbumsService: FavsAlbumsService,
-      private readonly albumsService: AlbumsService
-      ) {}
+    private readonly favsAlbumsService: FavsAlbumsService,
+    private readonly albumsService: AlbumsService,
+  ) {}
 
   @Post(':id')
   @HttpCode(HttpStatus.CREATED)
@@ -29,7 +29,7 @@ export class AlbumsController {
     uuid: string,
   ) {
     const album = await this.albumsService.getById(uuid);
-    if(album) {
+    if (album) {
       await this.favsAlbumsService.create(uuid);
     } else throw new UnprocessableEntityException('Album not found');
   }

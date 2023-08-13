@@ -10,23 +10,23 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavsArtistsService } from './artists.service';
-import { ArtistsService } from "../../artists/artists.service";
+import { ArtistsService } from '../../artists/artists.service';
 
 @Controller('')
 export class ArtistsController {
   constructor(
-      private readonly favsArtistsService: FavsArtistsService,
-      private readonly artistsService: ArtistsService,
+    private readonly favsArtistsService: FavsArtistsService,
+    private readonly artistsService: ArtistsService,
   ) {}
 
   @Post(':id')
   @HttpCode(HttpStatus.CREATED)
   async create(
-      @Param(
-          'id',
-          new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
-      )
-          uuid: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+    )
+    uuid: string,
   ) {
     const artist = await this.artistsService.getById(uuid);
     if (artist) {

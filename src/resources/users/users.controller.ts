@@ -14,7 +14,6 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { UserInterface } from '../../interfaces';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -83,9 +82,9 @@ export class UsersController {
     } else {
       if (checkPassword) {
         const updatedUser = await this.UsersService.update(uuid, newPassword);
-          return updatedUser;
-        } else {
-          throw new ForbiddenException('Old password is wrong');
+        return updatedUser;
+      } else {
+        throw new ForbiddenException('Old password is wrong');
       }
     }
   }

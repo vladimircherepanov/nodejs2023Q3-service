@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Favorites } from '../../../interfaces';
 import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FavsAlbums } from '../../../db/entities/favsAlbums.entity';

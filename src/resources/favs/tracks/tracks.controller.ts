@@ -10,13 +10,13 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavsTracksService } from './tracks.service';
-import {TracksService} from "../../tracks/tracks.service";
+import { TracksService } from '../../tracks/tracks.service';
 
 @Controller('')
 export class TracksController {
   constructor(
-      private readonly favsTracksService: FavsTracksService,
-      private readonly trackService: TracksService
+    private readonly favsTracksService: FavsTracksService,
+    private readonly trackService: TracksService,
   ) {}
 
   @Post(':id')
@@ -29,7 +29,7 @@ export class TracksController {
     uuid: string,
   ) {
     const track = await this.trackService.getById(uuid);
-    if(track) {
+    if (track) {
       await this.favsTracksService.create(uuid);
     } else throw new UnprocessableEntityException('Track not found');
   }
