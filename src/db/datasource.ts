@@ -8,6 +8,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: 'mydatabase',
   username: 'myuser',
   password: 'myuserpassword', // process.env.DB_PASSWORD,
-  synchronize: false,
+  migrations: [],
+  synchronize: true,
   logging: true,
 };
