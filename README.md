@@ -17,21 +17,14 @@ git clone {repository URL}
 cd nodejs2023Q3-service
 ```
 
-## Building container
+## Building containers and starting service
 
 ```
 docker-compose up
 ```
 
-## Running application
+After starting the service the app on port (4000 as default) you can open
 
-```
-npm start
-```
-
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Testing
 
