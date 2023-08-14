@@ -11,10 +11,16 @@
 git clone {repository URL}
 ```
 
-## Installing NPM modules
+## Changing the working directory
 
 ```
-npm install
+cd nodejs2023Q3-service
+```
+
+## Building container
+
+```
+docker-compose up
 ```
 
 ## Running application
