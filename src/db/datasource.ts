@@ -4,11 +4,11 @@ import path from "path";
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: 'postgres', //process.env.DB_HOST,
+  host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
-  database: 'mydatabase',
-  username: 'myuser', //process.env.DB_USERNAME, //'myuser',
-  password: 'myuserpassword',//process.env.DB_PASSWORD, //'myuserpassword', //,
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   entities: [],
   migrations: [],
   //entities: [path.join(__dirname, 'entities', '*{.ts,.js}')],

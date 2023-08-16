@@ -5,7 +5,6 @@ RUN npm install
 COPY ../.. .
 COPY .env ./dist
 RUN npm run build
-WORKDIR ./dist
-EXPOSE 4000
-CMD node src/main.js
+EXPOSE ${PORT}
+CMD npm run start:dev
 

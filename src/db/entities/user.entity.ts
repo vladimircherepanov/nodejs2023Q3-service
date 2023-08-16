@@ -22,10 +22,10 @@ export class User {
   @Column()
   version: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'bigint' })
   createdAt: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'bigint' })
   updatedAt: number;
 
   /////////////////////
