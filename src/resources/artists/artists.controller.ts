@@ -45,7 +45,7 @@ export class ArtistsController {
     if (artist) {
       return artist;
     } else {
-      throw new NotFoundException('Artist not found');
+      throw new NotFoundException('Artist not found XXX');
     }
   }
 
