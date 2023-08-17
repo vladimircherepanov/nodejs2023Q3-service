@@ -5,6 +5,10 @@ services:
       context: ./
     ports:
       - ${PORT}:${PORT}
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: ${JWT_EXPIRES}
+      JWT_REFRESH_EXPIRES: ${JWT_REFRESH_EXPIRES}
     volumes:
       - ./src:/usr/app/src
     networks:

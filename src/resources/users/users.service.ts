@@ -24,6 +24,14 @@ export class UsersService {
     return false;
   }
 
+  async getByLogin(login: string) {
+    const user = await this.usersRepository.findOne({ where: { login } });
+    if (user) {
+      return { user };
+    }
+    return false;
+  }
+
   async create(userDto: CreateUserDto) {
     const user = this.usersRepository.create({
       id: uuidv4(),
