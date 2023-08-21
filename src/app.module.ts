@@ -22,6 +22,11 @@ import { FavsAlbums } from './db/entities/favsAlbums.entity';
 import { FavsArtists } from './db/entities/favsArtists.entity';
 import { FavsTracks } from './db/entities/favsTracks.entity';
 
+import { AuthModule } from './auth/auth.module';
+import { SignupModule } from './auth/signup/signup.module';
+import { LoginModule } from './auth/login/login.module';
+import { RefreshModule } from './auth/refresh/refresh.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -45,6 +50,30 @@ import { FavsTracks } from './db/entities/favsTracks.entity';
     FavsArtistsModule,
     FavsAlbumsModule,
     FavsTracksModule,
+    AuthModule,
+    SignupModule,
+    LoginModule,
+    RefreshModule,
+    RouterModule.register([
+      {
+        path: 'auth',
+        module: AuthModule,
+        children: [
+          {
+            path: 'signup',
+            module: SignupModule,
+          },
+          {
+            path: 'login',
+            module: LoginModule,
+          },
+          {
+            path: 'refresh',
+            module: RefreshModule,
+          },
+        ],
+      },
+    ]),
     RouterModule.register([
       {
         path: 'favs',

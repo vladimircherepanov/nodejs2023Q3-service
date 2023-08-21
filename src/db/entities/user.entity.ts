@@ -4,11 +4,13 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
+  Unique,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
 @Entity()
+@Unique(['login'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,10 +24,10 @@ export class User {
   @Column()
   version: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'bigint' })
   createdAt: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'bigint' })
   updatedAt: number;
 
   /////////////////////
